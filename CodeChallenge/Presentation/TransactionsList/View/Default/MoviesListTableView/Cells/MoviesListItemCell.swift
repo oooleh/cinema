@@ -19,8 +19,13 @@ class MoviesListItemCell: UITableViewCell {
     @IBOutlet weak var posterImageView: UIImageView!
     
     private var imageLoadTask: CancelableTask? { willSet { imageLoadTask?.cancel() } }
-    private var item: MoviesListViewModel.Item?
-    
+    private var item: MoviesListViewModel.Item? {
+        didSet {
+            if oldValue != item {
+                posterImageView?.image = nil
+            }
+        }
+    }
     
     func fill(with item: MoviesListViewModel.Item) {
         self.item = item
@@ -30,10 +35,7 @@ class MoviesListItemCell: UITableViewCell {
         overviewLabel.text = item.overview
         
         imageLoadTask = item.loadImage(width: Int(posterImageView.frame.size.width * UIScreen.main.scale)) { [weak self] image in
-            guard let weakSelf = self else { return }
-            guard weakSelf.item == item else {
-                weakSelf.imageView?.image = nil; return
-            }
+            guard let weakSelf = self, weakSelf.item == item else { return }
             weakSelf.posterImageView.image = image
         }
     }
