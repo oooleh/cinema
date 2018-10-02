@@ -72,4 +72,5 @@ extension MoviesListViewModel {
     static let errorFailedReloading = NSLocalizedString("Failed reloading movies", comment: "")
     static let pullToRequestTitle = NSLocalizedString("Pull to refresh", comment: "")
     static let releaseDateTitle = NSLocalizedString("Release Date", comment: "")
+    static let releaseDateToBeAnnounced = NSLocalizedString("To be announced", comment: "")
 }

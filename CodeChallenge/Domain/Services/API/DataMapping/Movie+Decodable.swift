@@ -37,20 +37,12 @@ extension Movie: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(Int.self, forKey: .id)
         self.title = try container.decode(String.self, forKey: .title)
-        self.posterPath = try container.decode(String.self, forKey: .posterPath)
+        self.posterPath = try container.decodeIfPresent(String.self, forKey: .posterPath)
         self.overview = try container.decode(String.self, forKey: .overview)
         let releaseDateString = try container.decode(String.self, forKey: .releaseDate)
-        if let mappedDate = DateFormatter.yyyyMMdd.date(from: releaseDateString) {
-            releaseDate = mappedDate
-        } else {
-            throw DecodingError.dataCorruptedError(forKey: .releaseDate,
-                                                   in: container,
-                                                   debugDescription: "Date string does not match format")
-        }
+        releaseDate = DateFormatter.yyyyMMdd.date(from: releaseDateString)
     }
 }
-
-
 
 fileprivate extension DateFormatter {
     static let yyyyMMdd: DateFormatter = {

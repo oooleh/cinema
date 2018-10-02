@@ -14,7 +14,7 @@ extension MoviesListViewModel {
         
         let id: Int
         let title: String
-        let posterPath: String
+        let posterPath: String?
         let overview: String
         let releaseDate: String
         let imageDataSource: ImageDataSourceInterface?
@@ -27,13 +27,13 @@ extension MoviesListViewModel {
             self.overview = movie.overview
             let formatter = DateFormatter()
             formatter.dateStyle = .medium
-            self.releaseDate = formatter.string(from: movie.releaseDate)
+            self.releaseDate = movie.releaseDate != nil ? formatter.string(from: movie.releaseDate!) : MoviesListViewModel.releaseDateToBeAnnounced
             self.imageDataSource = imageDataSource
         }
         
         func loadImage(width: Int, completion: @escaping ((_ image: UIImage?) -> Void)) -> CancelableTask? {
 
-            guard let imageDataSource = imageDataSource else { completion(nil); return nil }
+            guard let imageDataSource = imageDataSource, let posterPath = posterPath else { completion(nil); return nil }
             return imageDataSource.image(with: APIEndpoints.moviePoster(path: posterPath, width: width).config) { result in
                     switch result {
                     case .success(let image):

@@ -18,9 +18,9 @@ struct MoviesPage {
 struct Movie {
     let id: MovieId
     let title: String
-    let posterPath: String
+    let posterPath: String?
     let overview: String
-    let releaseDate: Date
+    let releaseDate: Date?
 }
 
 extension Movie: Equatable {
