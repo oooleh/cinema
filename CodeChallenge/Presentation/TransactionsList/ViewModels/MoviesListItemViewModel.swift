@@ -31,10 +31,10 @@ extension MoviesListViewModel {
             self.imageDataSource = imageDataSource
         }
         
-        func loadImage(completion: @escaping ((_ image: UIImage?) -> Void)) -> CancelableTask? {
-            
+        func loadImage(width: Int, completion: @escaping ((_ image: UIImage?) -> Void)) -> CancelableTask? {
+
             guard let imageDataSource = imageDataSource else { completion(nil); return nil }
-            return imageDataSource.image(with: APIEndpoints.moviePoster(path: posterPath).config) { result in
+            return imageDataSource.image(with: APIEndpoints.moviePoster(path: posterPath, width: width).config) { result in
                     switch result {
                     case .success(let image):
                         completion(image)

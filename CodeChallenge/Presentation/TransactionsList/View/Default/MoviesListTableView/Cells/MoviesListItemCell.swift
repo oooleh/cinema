@@ -29,7 +29,7 @@ class MoviesListItemCell: UITableViewCell {
         dateLabel.text = "\(MoviesListViewModel.releaseDateTitle): \(item.releaseDate)"
         overviewLabel.text = item.overview
         
-        imageLoadTask = item.loadImage { [weak self] image in
+        imageLoadTask = item.loadImage(width: Int(posterImageView.frame.size.width * UIScreen.main.scale)) { [weak self] image in
             guard let weakSelf = self else { return }
             guard weakSelf.item == item else {
                 weakSelf.imageView?.image = nil; return

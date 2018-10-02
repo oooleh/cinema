@@ -9,8 +9,10 @@ import Foundation
 
 enum APIEndpoints {
     
+    private static let moviePosterWidthSizes = [92, 185, 500, 780]
+    
     case movies
-    case moviePoster(path: String)
+    case moviePoster(path: String, width: Int)
     
     var config: Endpoint {
         switch self {
@@ -19,8 +21,9 @@ enum APIEndpoints {
             return Endpoint(path: "3/search/movie/",
                             queryParameters: ["query": "batman",
                                               "page": "1"])
-        case .moviePoster(let path):
-            return Endpoint(path: "t/p/w92/\(path)")
+        case .moviePoster(let path, let width):
+            let availableWidth = APIEndpoints.moviePosterWidthSizes.sorted().first { width <= $0 } ?? APIEndpoints.moviePosterWidthSizes.last
+            return Endpoint(path: "t/p/w\(availableWidth!)/\(path)")
         }
     }
 }
