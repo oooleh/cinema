@@ -14,29 +14,36 @@ private extension Sequence where Element == Movie {
     }
 }
 
-private extension Sequence where Element == Movie {
-    var sortedMovies: [Movie] {
-        return sorted(by: { $0.releaseDate > $1.releaseDate })
-    }
-}
-
 struct MoviesListViewModel {
 
     enum LoadingType {
         case none
         case fullScreen
         case pullToRefresh
+        case nextPage
     }
     
-    private(set) var items: [Item]
+    private(set) var items: [Item] = []
+    private(set) var currentPage: Int = 0
+    private(set) var totalPageCount: Int = 1
     var isEmpty: Bool { return items.isEmpty }
     var isLoading: Bool { return loadingType != .none }
     var loadingType: LoadingType = .none
 
-    init(movies: [Movie]? = nil, imageDataSource: ImageDataSourceInterface? = nil) {
-        self.items = movies?.sortedMovies.mapToItems(imageDataSource: imageDataSource) ?? []
+    var hasMorePages: Bool {
+        return currentPage < totalPageCount
     }
-
+    
+    var nextPage: Int {
+        guard hasMorePages else { return currentPage }
+        return currentPage + 1
+    }
+    
+    init(moviesPage: MoviesPage? = nil, imageDataSource: ImageDataSourceInterface? = nil) {
+        guard let moviesPage = moviesPage else { return }
+        appendPage(moviesPage: moviesPage, imageDataSource: imageDataSource)
+    }
+    
     var numberOfSections: Int {
         return 1
     }
@@ -48,6 +55,12 @@ struct MoviesListViewModel {
     
     func item(at indexPath: IndexPath) -> Item? {
         return items[indexPath.row]
+    }
+    
+    mutating func appendPage(moviesPage: MoviesPage, imageDataSource: ImageDataSourceInterface? = nil) {
+        self.currentPage = moviesPage.page
+        self.totalPageCount = moviesPage.totalPages
+        self.items = items + moviesPage.movies.mapToItems(imageDataSource: imageDataSource)
     }
 }
 

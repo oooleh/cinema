@@ -11,6 +11,7 @@ protocol iMoviesListEventHandler: class {
     
     func viewDidLoad()
     func didPullDownToRefresh()
+    func didScrollToBottom()
 }
 
 class MoviesListPresenter {
@@ -20,6 +21,7 @@ class MoviesListPresenter {
     var imageDataSource: ImageDataSourceInterface
     
     weak var view: MoviesListViewInterface?
+    var viewModel = MoviesListViewModel()
     
     init(wireframe: MoviesListWireframe, interactor: MoviesListInteractor, imageDataSource: ImageDataSourceInterface) {
         self.wireframe = wireframe
@@ -28,20 +30,18 @@ class MoviesListPresenter {
     }
     
     private func updateView(loadingType: MoviesListViewModel.LoadingType) {
+
+        self.viewModel.loadingType = loadingType
+        view?.viewModel = viewModel
         
-        guard let view = view else { return }
-        
-        var oldViewModel = view.viewModel
-        oldViewModel.loadingType = loadingType
-        view.viewModel = oldViewModel
-        
-        self.interactor.loadMovies() { [weak self] result in
+        self.interactor.loadMovies(page: viewModel.nextPage) { [weak self] result in
             guard let weakSelf = self else { return }
-            oldViewModel.loadingType = .none
-            weakSelf.view?.viewModel = oldViewModel
+            weakSelf.viewModel.loadingType = .none
+            weakSelf.view?.viewModel = weakSelf.viewModel
             switch result {
-            case .success(let movies):
-                weakSelf.view?.viewModel = MoviesListViewModel(movies: movies, imageDataSource: weakSelf.imageDataSource)
+            case .success(let moviesPage):
+                weakSelf.viewModel.appendPage(moviesPage: moviesPage, imageDataSource: weakSelf.imageDataSource)
+                weakSelf.view?.viewModel = weakSelf.viewModel
                 return
             case .failure(let error):
                 let userErrorMessage = (error is NetworkError) ? MoviesListViewModel.errorNoConnection : MoviesListViewModel.errorFailedReloading
@@ -59,6 +59,12 @@ extension MoviesListPresenter : iMoviesListEventHandler {
     }
     
     func didPullDownToRefresh() {
+        viewModel = MoviesListViewModel()
         updateView(loadingType: .pullToRefresh)
+    }
+    
+    func didScrollToBottom() {
+        guard viewModel.hasMorePages, !viewModel.isLoading else { return }
+        updateView(loadingType: .nextPage)
     }
 }

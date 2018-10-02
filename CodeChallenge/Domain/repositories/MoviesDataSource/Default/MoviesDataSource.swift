@@ -18,13 +18,13 @@ class MoviesDataSource {
 
 extension MoviesDataSource: MoviesDataSourceInterface {
     
-    func moviesList(with result: @escaping (Result<[Movie], Error>) -> Void) -> CancelableTask? {
-        let endpoint = APIEndpoints.movies.config
+    func moviesList(page: Int, with result: @escaping (Result<MoviesPage, Error>) -> Void) -> CancelableTask? {
+        let endpoint = APIEndpoints.movies(page: page).config
         
-        return self.dataTransferService.request(with: endpoint) { (response: Result<MoviesList, Error>) in
+        return self.dataTransferService.request(with: endpoint) { (response: Result<MoviesPage, Error>) in
             switch response {
-            case .success(let moviesList):
-                result(.success(moviesList.movies))
+            case .success(let moviesPage):
+                result(.success(moviesPage))
                 return
             case .failure(let error):
                 result(.failure(error))

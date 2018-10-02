@@ -37,7 +37,6 @@ class MoviesListView: UIViewController, Alertable {
             tableViewController = destinationVC
             tableViewController?.eventHandler = eventHandler
             tableViewController?.viewModel = viewModel
-            tableViewController?.reload()
         }
     }
     
@@ -49,7 +48,6 @@ class MoviesListView: UIViewController, Alertable {
     private func updateViewModel(_ model: MoviesListViewModel) {
         setFullScreen(isLoading: model.loadingType == .fullScreen)
         tableViewController?.viewModel = viewModel
-        tableViewController?.reload()
     }
 }
 

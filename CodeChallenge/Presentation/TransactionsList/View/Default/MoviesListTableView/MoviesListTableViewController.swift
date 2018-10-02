@@ -11,24 +11,28 @@ import UIKit
 class MoviesListTableViewController: UITableViewController {
     
     weak var eventHandler: iMoviesListEventHandler?
+    var nextPageLoadingSpinner: UIActivityIndicatorView?
     var viewModel: MoviesListViewModel! {
-        didSet { reload() }
+        didSet { reload(previousViewModel: oldValue, viewModel: viewModel) }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.estimatedRowHeight = MoviesListItemCell.height
+        tableView.rowHeight = UITableViewAutomaticDimension
         refreshControl = UIRefreshControl()
         refreshControl?.attributedTitle = NSAttributedString(string: MoviesListViewModel.pullToRequestTitle)
         refreshControl?.addTarget(self, action: #selector(handleRefresh(_:)), for: UIControlEvents.valueChanged)
     }
     
-    func reload() {
-        tableView.reloadData()
-        tableView.estimatedRowHeight = MoviesListItemCell.height
-        tableView.rowHeight = UITableViewAutomaticDimension
+    private func reload(previousViewModel: MoviesListViewModel?, viewModel: MoviesListViewModel) {
+        guard previousViewModel?.items != viewModel.items ||
+            previousViewModel?.loadingType != viewModel.loadingType else { return }
         setRefreshControl(isEnabled: true)
         setRefreshControl(isLoading: viewModel.loadingType == .pullToRefresh)
+        setNextPage(isLoading: viewModel.loadingType == .nextPage)
+        tableView.reloadData()
     }
     
     private func setRefreshControl(isEnabled: Bool) {
@@ -59,6 +63,20 @@ class MoviesListTableViewController: UITableViewController {
     @objc func handleRefresh(_ refreshControl: UIRefreshControl) {
         eventHandler?.didPullDownToRefresh()
     }
+    
+    private func setNextPage(isLoading: Bool) {
+        if isLoading {
+            nextPageLoadingSpinner?.removeFromSuperview()
+            nextPageLoadingSpinner = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+            nextPageLoadingSpinner?.startAnimating()
+            nextPageLoadingSpinner?.isHidden = false
+            nextPageLoadingSpinner?.frame = CGRect(x: CGFloat(0), y: CGFloat(0), width: tableView.frame.width, height: 44)
+            tableView.tableFooterView = nextPageLoadingSpinner
+        }
+        else {
+            tableView.tableFooterView = nil
+        }
+    }
 }
 
 // MARK: - UITableViewDataSource, UITableViewDelegate
@@ -82,6 +100,10 @@ extension MoviesListTableViewController {
         
         if let item = viewModel.item(at: indexPath) {
             cell.fill(with: item)
+        }
+        
+        if indexPath.row == viewModel.numberOfRows(inSection: indexPath.section) - 1 {
+            eventHandler?.didScrollToBottom()
         }
         
         return cell

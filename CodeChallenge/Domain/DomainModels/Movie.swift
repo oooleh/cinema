@@ -9,6 +9,12 @@ import Foundation
 
 typealias MovieId = Int
 
+struct MoviesPage {
+    let page: Int
+    let totalPages: Int
+    let movies: [Movie]
+}
+
 struct Movie {
     let id: MovieId
     let title: String

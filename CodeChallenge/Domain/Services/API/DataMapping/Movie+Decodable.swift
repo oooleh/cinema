@@ -7,13 +7,7 @@
 
 import Foundation
 
-struct MoviesList {
-    let page: Int
-    let totalPages: Int
-    let movies: [Movie]
-}
-
-extension MoviesList : Decodable {
+extension MoviesPage : Decodable {
     
     private enum CodingKeys: String, CodingKey {
         case page
