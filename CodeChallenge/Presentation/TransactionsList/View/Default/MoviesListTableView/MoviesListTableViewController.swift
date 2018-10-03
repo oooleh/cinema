@@ -21,6 +21,7 @@ class MoviesListTableViewController: UITableViewController {
         
         tableView.estimatedRowHeight = MoviesListItemCell.height
         tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.allowsSelection = false
     }
     
     private func reload(previousViewModel: MoviesListViewModel?, viewModel: MoviesListViewModel) {
