@@ -12,6 +12,7 @@ protocol iMoviesListEventHandler: class {
     func viewDidLoad()
     func didScrollToBottom()
     func searchBarSearchButtonClicked(text: String)
+    func searchBarCancelButtonClicked()
 }
 
 class MoviesListPresenter {
@@ -81,5 +82,9 @@ extension MoviesListPresenter : iMoviesListEventHandler {
         viewModel = MoviesListViewModel(imageDataSource: imageDataSource)
         viewModel.query = text
         updateView(loadingType: .fullScreen)
+    }
+    
+    func searchBarCancelButtonClicked() {
+        moviesLoadTask?.cancel()
     }
 }

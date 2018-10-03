@@ -77,7 +77,7 @@ extension MoviesListView: UISearchBarDelegate {
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.resignFirstResponder()
+        eventHandler?.searchBarCancelButtonClicked()
     }
 }
 
