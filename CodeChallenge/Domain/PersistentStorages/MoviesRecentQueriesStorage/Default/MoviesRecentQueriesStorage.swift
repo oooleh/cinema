@@ -29,6 +29,7 @@ extension MovieQuery: Codable {
 
 class MoviesRecentQueriesStorage {
     private let userDefaultsKey = "recentsMoviesQueries"
+    private let maxRecentsCount = 20
     private var userDefaults: UserDefaults { return UserDefaults.standard }
     private var moviesQuries: [MovieQuery] {
         get {
@@ -46,7 +47,6 @@ class MoviesRecentQueriesStorage {
                 userDefaults.set(encoded, forKey: userDefaultsKey)
             }
         }
-        
     }
 }
 
@@ -60,6 +60,7 @@ extension MoviesRecentQueriesStorage: MoviesRecentQueriesStorageInterface {
         var queries = moviesQuries
         queries = queries.filter { $0 != query }
         queries.insert(query, at: 0)
+        queries = queries.count <= maxRecentsCount ? queries : Array(queries[0..<maxRecentsCount])
         moviesQuries = queries
     }
 }
