@@ -38,6 +38,10 @@
 		FC2B714E2156DA4B002BD59E /* Categories.plist in Resources */ = {isa = PBXBuildFile; fileRef = FC2B714D2156DA4B002BD59E /* Categories.plist */; };
 		FC2B715C2156FF93002BD59E /* AppAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC2B715B2156FF93002BD59E /* AppAppearance.swift */; };
 		FC2B716221579844002BD59E /* MoviesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC2B713B2156C3D4002BD59E /* MoviesListView.swift */; };
+		FC4ED8572164E3E7009CDA81 /* SuggestionsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC4ED8562164E3E7009CDA81 /* SuggestionsTableViewController.swift */; };
+		FC4ED85A2164E841009CDA81 /* SuggestionsItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC4ED8592164E841009CDA81 /* SuggestionsItemCell.swift */; };
+		FC740816216555A900FE52A5 /* MoviesRecentQueriesStorageInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC740815216555A900FE52A5 /* MoviesRecentQueriesStorageInterface.swift */; };
+		FC740818216555C500FE52A5 /* MoviesRecentQueriesStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC740817216555C500FE52A5 /* MoviesRecentQueriesStorage.swift */; };
 		FC840CE821609DDE00716F19 /* MoviesListViewInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC840CE721609DDE00716F19 /* MoviesListViewInterface.swift */; };
 /* End PBXBuildFile section */
 
@@ -87,6 +91,10 @@
 		FC2B71472156CEB1002BD59E /* Movie+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Movie+Decodable.swift"; sourceTree = "<group>"; };
 		FC2B714D2156DA4B002BD59E /* Categories.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Categories.plist; path = CodeChallenge/resources/Categories.plist; sourceTree = SOURCE_ROOT; };
 		FC2B715B2156FF93002BD59E /* AppAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAppearance.swift; sourceTree = "<group>"; };
+		FC4ED8562164E3E7009CDA81 /* SuggestionsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionsTableViewController.swift; sourceTree = "<group>"; };
+		FC4ED8592164E841009CDA81 /* SuggestionsItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionsItemCell.swift; sourceTree = "<group>"; };
+		FC740815216555A900FE52A5 /* MoviesRecentQueriesStorageInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesRecentQueriesStorageInterface.swift; sourceTree = "<group>"; };
+		FC740817216555C500FE52A5 /* MoviesRecentQueriesStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesRecentQueriesStorage.swift; sourceTree = "<group>"; };
 		FC840CE721609DDE00716F19 /* MoviesListViewInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesListViewInterface.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -190,6 +198,7 @@
 		1FA533D1201EF1EC00747E55 /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				FC7408122165557500FE52A5 /* PersistentStorages */,
 				1FA533DE201EF53E00747E55 /* Repositories */,
 				1FA533D8201EF2F100747E55 /* Services */,
 				1FA533D2201EF21000747E55 /* DomainModels */,
@@ -364,6 +373,48 @@
 			path = DataMapping;
 			sourceTree = "<group>";
 		};
+		FC4ED8552164E3AE009CDA81 /* SuggestionsTableView */ = {
+			isa = PBXGroup;
+			children = (
+				FC4ED8562164E3E7009CDA81 /* SuggestionsTableViewController.swift */,
+				FC4ED8582164E81F009CDA81 /* Cells */,
+			);
+			path = SuggestionsTableView;
+			sourceTree = "<group>";
+		};
+		FC4ED8582164E81F009CDA81 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				FC4ED8592164E841009CDA81 /* SuggestionsItemCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		FC7408122165557500FE52A5 /* PersistentStorages */ = {
+			isa = PBXGroup;
+			children = (
+				FC7408132165558800FE52A5 /* MoviesRecentQueriesStorage */,
+			);
+			path = PersistentStorages;
+			sourceTree = "<group>";
+		};
+		FC7408132165558800FE52A5 /* MoviesRecentQueriesStorage */ = {
+			isa = PBXGroup;
+			children = (
+				FC740815216555A900FE52A5 /* MoviesRecentQueriesStorageInterface.swift */,
+				FC7408142165559100FE52A5 /* Default */,
+			);
+			path = MoviesRecentQueriesStorage;
+			sourceTree = "<group>";
+		};
+		FC7408142165559100FE52A5 /* Default */ = {
+			isa = PBXGroup;
+			children = (
+				FC740817216555C500FE52A5 /* MoviesRecentQueriesStorage.swift */,
+			);
+			path = Default;
+			sourceTree = "<group>";
+		};
 		FC7FDEEE2157C41500D98241 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -377,6 +428,7 @@
 			children = (
 				FC2B713B2156C3D4002BD59E /* MoviesListView.swift */,
 				FC2B71392156C3D4002BD59E /* MoviesListStoryboard.storyboard */,
+				FC4ED8552164E3AE009CDA81 /* SuggestionsTableView */,
 				FC2B713F2156C3DF002BD59E /* MoviesListTableView */,
 			);
 			path = Default;
@@ -501,12 +553,16 @@
 				FC2B71422156C3EA002BD59E /* MoviesListTableViewController.swift in Sources */,
 				1FEED0DA20232B28000F4EAA /* MoviesListPresenter.swift in Sources */,
 				1FA533DA201EF34100747E55 /* MoviesDataSourceInterface.swift in Sources */,
+				FC4ED8572164E3E7009CDA81 /* SuggestionsTableViewController.swift in Sources */,
+				FC740818216555C500FE52A5 /* MoviesRecentQueriesStorage.swift in Sources */,
 				1F8191AE20237B8F00143522 /* ImageDataSourceInterface.swift in Sources */,
 				1FA533AF201E20FD00747E55 /* Endpoint.swift in Sources */,
 				1FA533BA201EE55400747E55 /* NetworkConfig.swift in Sources */,
+				FC740816216555A900FE52A5 /* MoviesRecentQueriesStorageInterface.swift in Sources */,
 				1FEED0CC20220B6B000F4EAA /* MoviesListItemViewModel.swift in Sources */,
 				1FEED0DD20232B6D000F4EAA /* MoviesListWireframe.swift in Sources */,
 				1FA5338D201E1FDE00747E55 /* AppDelegate.swift in Sources */,
+				FC4ED85A2164E841009CDA81 /* SuggestionsItemCell.swift in Sources */,
 				FC840CE821609DDE00716F19 /* MoviesListViewInterface.swift in Sources */,
 				1F8191B120237C1000143522 /* ImageDataSource.swift in Sources */,
 				1FA533DD201EF3D800747E55 /* MoviesDataSource.swift in Sources */,

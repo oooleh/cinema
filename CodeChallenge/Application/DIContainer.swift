@@ -18,7 +18,8 @@ class DIContainer {
     
     // MARK: - Data Sources
     lazy var moviesDataSource: MoviesDataSourceInterface = {
-        return MoviesDataSource(dataTransferService: apiDataTransferService)
+        return MoviesDataSource(dataTransferService: apiDataTransferService,
+                                moviesPersistentStorage: MoviesRecentQueriesStorage())
     }()
     
     lazy var imageDataSource: ImageDataSourceInterface = {

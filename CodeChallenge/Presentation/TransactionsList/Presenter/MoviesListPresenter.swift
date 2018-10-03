@@ -13,21 +13,25 @@ protocol iMoviesListEventHandler: class {
     func didScrollToBottom()
     func searchBarSearchButtonClicked(text: String)
     func searchBarCancelButtonClicked()
+    func didSelect(suggestion: String)
 }
 
 class MoviesListPresenter {
-        
+    
     var wireframe: MoviesListWireframe
     var interactor: MoviesListInteractor
     weak var view: MoviesListViewInterface?
     private var imageDataSource: ImageDataSourceInterface
     private var viewModel = MoviesListViewModel()
     private var moviesLoadTask: CancelableTask? { willSet { moviesLoadTask?.cancel() } }
+    let numberOfQuerySuggestions = 10
+    var querySuggestions: [String] { return interactor.recentsQueries(number: numberOfQuerySuggestions) }
     
     init(wireframe: MoviesListWireframe, interactor: MoviesListInteractor, imageDataSource: ImageDataSourceInterface) {
         self.wireframe = wireframe
         self.interactor = interactor
         self.imageDataSource = imageDataSource
+        self.viewModel.suggestions = querySuggestions
     }
     
     private func updateView(loadingType: MoviesListViewModel.LoadingType) {
@@ -48,7 +52,9 @@ class MoviesListPresenter {
                     weakSelf.view?.showError(MoviesListViewModel.errorMovieNotFound)
                     return
                 }
+                weakSelf.interactor.saveRecentQuery(query: weakSelf.viewModel.query)
                 weakSelf.viewModel.appendPage(moviesPage: moviesPage, imageDataSource: weakSelf.imageDataSource)
+                weakSelf.viewModel.suggestions = weakSelf.querySuggestions
                 weakSelf.view?.viewModel = weakSelf.viewModel
             case .failure(let error):
                 weakSelf.handleError(error: error)
@@ -79,12 +85,18 @@ extension MoviesListPresenter : iMoviesListEventHandler {
     
     func searchBarSearchButtonClicked(text: String) {
         guard !text.isEmpty else { return }
-        viewModel = MoviesListViewModel(imageDataSource: imageDataSource)
+        viewModel = MoviesListViewModel(suggestions: querySuggestions, imageDataSource: imageDataSource)
         viewModel.query = text
         updateView(loadingType: .fullScreen)
     }
     
     func searchBarCancelButtonClicked() {
         moviesLoadTask?.cancel()
+    }
+    
+    func didSelect(suggestion: String) {
+        viewModel = MoviesListViewModel(suggestions: querySuggestions, imageDataSource: imageDataSource)
+        viewModel.query = suggestion
+        updateView(loadingType: .fullScreen)
     }
 }

@@ -29,6 +29,7 @@ struct MoviesListViewModel {
     var isLoading: Bool { return loadingType != .none }
     var loadingType: LoadingType = .none
     var query: String = ""
+    var suggestions: [String]
 
     var hasMorePages: Bool {
         return currentPage < totalPageCount
@@ -39,7 +40,8 @@ struct MoviesListViewModel {
         return currentPage + 1
     }
     
-    init(moviesPage: MoviesPage? = nil, imageDataSource: ImageDataSourceInterface? = nil) {
+    init(moviesPage: MoviesPage? = nil, suggestions: [String] = [], imageDataSource: ImageDataSourceInterface? = nil) {
+        self.suggestions = suggestions
         guard let moviesPage = moviesPage else { return }
         appendPage(moviesPage: moviesPage, imageDataSource: imageDataSource)
     }
