@@ -8,16 +8,22 @@
 import Foundation
 
 protocol CancelableTask {
+    var isRunning: Bool { get }
     func cancel()
     func resume()
 }
 
-extension URLSessionDataTask: CancelableTask { }
+extension URLSessionDataTask: CancelableTask {
+    var isRunning: Bool {
+        return state == .running
+    }
+}
 
 class NetworkOperation: CancelableTask {
     
     var request: URLRequest
     var sessionDataTask: URLSessionDataTask?
+    var isRunning: Bool { return sessionDataTask?.state == .running }
     
     init(request: URLRequest) {
         self.request = request

@@ -35,20 +35,23 @@ class MoviesListPresenter {
         viewModel.loadingType = loadingType
         view?.viewModel = viewModel
         moviesLoadTask = interactor.loadMovies(query: viewModel.query, page: viewModel.nextPage) { [weak self] result in
-                guard let weakSelf = self else { return }
+            guard let weakSelf = self else { return }
+            if let moviesLoadTask = weakSelf.moviesLoadTask, !moviesLoadTask.isRunning {
                 weakSelf.viewModel.loadingType = .none
                 weakSelf.view?.viewModel = weakSelf.viewModel
-                switch result {
-                case .success(let moviesPage):
-                    guard !moviesPage.movies.isEmpty else {
-                        weakSelf.view?.showError(MoviesListViewModel.errorMovieNotFound)
-                        return
-                    }
-                    weakSelf.viewModel.appendPage(moviesPage: moviesPage, imageDataSource: weakSelf.imageDataSource)
-                    weakSelf.view?.viewModel = weakSelf.viewModel
-                case .failure(let error):
-                    weakSelf.handleError(error: error)
+            }
+
+            switch result {
+            case .success(let moviesPage):
+                guard !moviesPage.movies.isEmpty else {
+                    weakSelf.view?.showError(MoviesListViewModel.errorMovieNotFound)
+                    return
                 }
+                weakSelf.viewModel.appendPage(moviesPage: moviesPage, imageDataSource: weakSelf.imageDataSource)
+                weakSelf.view?.viewModel = weakSelf.viewModel
+            case .failure(let error):
+                weakSelf.handleError(error: error)
+            }
         }
     }
     
