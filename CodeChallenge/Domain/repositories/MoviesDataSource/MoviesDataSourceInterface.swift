@@ -9,5 +9,5 @@ import Foundation
 
 protocol MoviesDataSourceInterface {
     @discardableResult
-    func moviesList(page: Int, with result: @escaping (Result<MoviesPage, Error>) -> Void) -> CancelableTask?
+    func moviesList(query: String, page: Int, with result: @escaping (Result<MoviesPage, Error>) -> Void) -> CancelableTask?
 }

@@ -16,8 +16,8 @@ class MoviesListInteractor {
         self.moviesDataSource = moviesDataSource
     }
     
-    func loadMovies(page: Int, with completion: @escaping (Result<MoviesPage, Error>) -> Void) {
-        moviesDataSource.moviesList(page: page) { result in
+    func loadMovies(query: String, page: Int, with completion: @escaping (Result<MoviesPage, Error>) -> Void) -> CancelableTask? {
+        return moviesDataSource.moviesList(query: query, page: page) { result in
             DispatchQueue.main.async {
                 completion(result)
             }

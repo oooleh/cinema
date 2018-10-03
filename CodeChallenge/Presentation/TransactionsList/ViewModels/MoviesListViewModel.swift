@@ -15,11 +15,10 @@ private extension Sequence where Element == Movie {
 }
 
 struct MoviesListViewModel {
-
+    
     enum LoadingType {
         case none
         case fullScreen
-        case pullToRefresh
         case nextPage
     }
     
@@ -29,6 +28,7 @@ struct MoviesListViewModel {
     var isEmpty: Bool { return items.isEmpty }
     var isLoading: Bool { return loadingType != .none }
     var loadingType: LoadingType = .none
+    var query: String = ""
 
     var hasMorePages: Bool {
         return currentPage < totalPageCount
@@ -50,7 +50,7 @@ struct MoviesListViewModel {
     
     func numberOfRows(inSection section: Int) -> Int {
         guard section < numberOfSections else { return 0 }
-        return !isEmpty ? items.count: 1
+        return items.count
     }
     
     func item(at indexPath: IndexPath) -> Item? {
@@ -66,11 +66,12 @@ struct MoviesListViewModel {
 
 extension MoviesListViewModel {
     static let title = NSLocalizedString("Movies", comment: "")
-    static let emptyListTitle = NSLocalizedString("You list is empty.\nPlease Pull to refresh", comment: "")
+    static let searchBarPlaceholder = NSLocalizedString("Search Movies", comment: "")
+    static let emptyListTitle = NSLocalizedString("List is empty.", comment: "")
     static let errorTitle = NSLocalizedString("Error", comment: "")
     static let errorNoConnection = NSLocalizedString("No internet connection", comment: "")
-    static let errorFailedReloading = NSLocalizedString("Failed reloading movies", comment: "")
-    static let pullToRequestTitle = NSLocalizedString("Pull to refresh", comment: "")
+    static let errorMovieNotFound = NSLocalizedString("The film does not exist", comment: "")
+    static let errorFailedLoading = NSLocalizedString("Failed loading movies", comment: "")
     static let releaseDateTitle = NSLocalizedString("Release Date", comment: "")
     static let releaseDateToBeAnnounced = NSLocalizedString("To be announced", comment: "")
 }

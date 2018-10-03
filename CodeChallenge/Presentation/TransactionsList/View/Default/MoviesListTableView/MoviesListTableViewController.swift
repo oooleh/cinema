@@ -21,47 +21,13 @@ class MoviesListTableViewController: UITableViewController {
         
         tableView.estimatedRowHeight = MoviesListItemCell.height
         tableView.rowHeight = UITableViewAutomaticDimension
-        refreshControl = UIRefreshControl()
-        refreshControl?.attributedTitle = NSAttributedString(string: MoviesListViewModel.pullToRequestTitle)
-        refreshControl?.addTarget(self, action: #selector(handleRefresh(_:)), for: UIControlEvents.valueChanged)
     }
     
     private func reload(previousViewModel: MoviesListViewModel?, viewModel: MoviesListViewModel) {
         guard previousViewModel?.items != viewModel.items ||
             previousViewModel?.loadingType != viewModel.loadingType else { return }
-        setRefreshControl(isEnabled: true)
-        setRefreshControl(isLoading: viewModel.loadingType == .pullToRefresh)
         setNextPage(isLoading: viewModel.loadingType == .nextPage)
         tableView.reloadData()
-    }
-    
-    private func setRefreshControl(isEnabled: Bool) {
-        guard let refreshControl = refreshControl else { return }
-        if isEnabled {
-            tableView.addSubview(refreshControl)
-        } else {
-            refreshControl.removeFromSuperview()
-        }
-    }
-    
-    private func setRefreshControl(isLoading: Bool) {
-        if isLoading {
-            refreshControl?.beginRefreshing()
-        } else {
-            endRefreshing()
-        }
-    }
-    
-    private func endRefreshing() {
-        guard let refreshControl = refreshControl else { return }
-        if refreshControl.isRefreshing {
-            tableView.setContentOffset(.zero, animated: true)
-            refreshControl.endRefreshing()
-        }
-    }
-    
-    @objc func handleRefresh(_ refreshControl: UIRefreshControl) {
-        eventHandler?.didPullDownToRefresh()
     }
     
     private func setNextPage(isLoading: Bool) {
@@ -91,10 +57,6 @@ extension MoviesListTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        guard !viewModel.isEmpty else {
-            return tableView.dequeueReusableCell(withIdentifier: MoviesListEmptyDataCell.reuseIdentifier, for: indexPath) as! MoviesListEmptyDataCell
-        }
         
         let cell = tableView.dequeueReusableCell(withIdentifier: MoviesListItemCell.reuseIdentifier, for: indexPath) as! MoviesListItemCell
         

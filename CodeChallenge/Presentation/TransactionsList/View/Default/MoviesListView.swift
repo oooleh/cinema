@@ -12,7 +12,9 @@ class MoviesListView: UIViewController, Alertable {
     
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var tableViewContainer: UIView!
+    @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var loadingView: UIActivityIndicatorView!
+    @IBOutlet weak var emptyDataLabel: UILabel!
     
     private var tableViewController: MoviesListTableViewController?
     
@@ -29,6 +31,8 @@ class MoviesListView: UIViewController, Alertable {
         super.viewDidLoad()
         eventHandler?.viewDidLoad()
         title = MoviesListViewModel.title
+        emptyDataLabel.text = MoviesListViewModel.emptyListTitle
+        searchBar.delegate = self
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -40,14 +44,40 @@ class MoviesListView: UIViewController, Alertable {
         }
     }
     
-    private func setFullScreen(isLoading: Bool) {
-        contentView.isHidden = isLoading
-        loadingView.isHidden = !isLoading
+    private func updateViewModel(_ model: MoviesListViewModel) {
+        setScreenMode(model: model)
+        setupSearchBar(viewModel)
+        tableViewController?.viewModel = viewModel
     }
     
-    private func updateViewModel(_ model: MoviesListViewModel) {
-        setFullScreen(isLoading: model.loadingType == .fullScreen)
-        tableViewController?.viewModel = viewModel
+    private func setScreenMode(model: MoviesListViewModel) {
+        loadingView.isHidden = true
+        emptyDataLabel.isHidden = true
+        tableViewContainer.isHidden = true
+        if model.loadingType == .fullScreen {
+            loadingView.isHidden = false
+        } else if model.isEmpty {
+            emptyDataLabel.isHidden = false
+        } else {
+            tableViewContainer.isHidden = false
+        }
+    }
+    
+    private func setupSearchBar(_ model: MoviesListViewModel) {
+        searchBar.text = model.query
+        searchBar.placeholder = MoviesListViewModel.searchBarPlaceholder
+    }
+}
+
+extension MoviesListView: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        tableViewController?.tableView.setContentOffset(CGPoint.zero, animated: false)
+        eventHandler?.searchBarSearchButtonClicked(text: searchBar.text ?? "")
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
     }
 }
 

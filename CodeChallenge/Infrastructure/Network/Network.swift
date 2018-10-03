@@ -37,9 +37,10 @@ protocol NetworkServiceInterface {
     func request(endpoint: Requestable, completion: @escaping (Data?, URLResponse?, Error?) -> Void) throws -> NetworkOperation
 }
 
-enum NetworkError: Error {
+enum NetworkError: Error, Equatable {
     case errorStatusCode(statusCode: Int)
     case notConnected
+    case cancelled
 }
 
 extension NetworkError {
@@ -84,6 +85,8 @@ class NetworkService {
             if var error = error {
                 if error._code == NSURLErrorNotConnectedToInternet {
                     error = NetworkError.notConnected
+                } else if error._code == NSURLErrorCancelled {
+                    error = NetworkError.cancelled
                 }
                 completion(nil, nil, error)
             }

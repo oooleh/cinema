@@ -38,7 +38,6 @@
 		FC2B714E2156DA4B002BD59E /* Categories.plist in Resources */ = {isa = PBXBuildFile; fileRef = FC2B714D2156DA4B002BD59E /* Categories.plist */; };
 		FC2B715C2156FF93002BD59E /* AppAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC2B715B2156FF93002BD59E /* AppAppearance.swift */; };
 		FC2B716221579844002BD59E /* MoviesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC2B713B2156C3D4002BD59E /* MoviesListView.swift */; };
-		FC7FDEED2157C40000D98241 /* MoviesListEmptyDataCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7FDEEC2157C40000D98241 /* MoviesListEmptyDataCell.swift */; };
 		FC840CE821609DDE00716F19 /* MoviesListViewInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC840CE721609DDE00716F19 /* MoviesListViewInterface.swift */; };
 /* End PBXBuildFile section */
 
@@ -88,7 +87,6 @@
 		FC2B71472156CEB1002BD59E /* Movie+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Movie+Decodable.swift"; sourceTree = "<group>"; };
 		FC2B714D2156DA4B002BD59E /* Categories.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Categories.plist; path = CodeChallenge/resources/Categories.plist; sourceTree = SOURCE_ROOT; };
 		FC2B715B2156FF93002BD59E /* AppAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAppearance.swift; sourceTree = "<group>"; };
-		FC7FDEEC2157C40000D98241 /* MoviesListEmptyDataCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesListEmptyDataCell.swift; sourceTree = "<group>"; };
 		FC840CE721609DDE00716F19 /* MoviesListViewInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesListViewInterface.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -370,7 +368,6 @@
 			isa = PBXGroup;
 			children = (
 				FC2B71412156C3EA002BD59E /* MoviesListItemCell.swift */,
-				FC7FDEEC2157C40000D98241 /* MoviesListEmptyDataCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -502,7 +499,6 @@
 				1FA533BC201EE66700747E55 /* DataTransfer.swift in Sources */,
 				FC2B71482156CEB1002BD59E /* Movie+Decodable.swift in Sources */,
 				FC2B71422156C3EA002BD59E /* MoviesListTableViewController.swift in Sources */,
-				FC7FDEED2157C40000D98241 /* MoviesListEmptyDataCell.swift in Sources */,
 				1FEED0DA20232B28000F4EAA /* MoviesListPresenter.swift in Sources */,
 				1FA533DA201EF34100747E55 /* MoviesDataSourceInterface.swift in Sources */,
 				1F8191AE20237B8F00143522 /* ImageDataSourceInterface.swift in Sources */,

@@ -10,18 +10,18 @@ import Foundation
 protocol iMoviesListEventHandler: class {
     
     func viewDidLoad()
-    func didPullDownToRefresh()
     func didScrollToBottom()
+    func searchBarSearchButtonClicked(text: String)
 }
 
 class MoviesListPresenter {
         
     var wireframe: MoviesListWireframe
     var interactor: MoviesListInteractor
-    var imageDataSource: ImageDataSourceInterface
-    
     weak var view: MoviesListViewInterface?
-    var viewModel = MoviesListViewModel()
+    private var imageDataSource: ImageDataSourceInterface
+    private var viewModel = MoviesListViewModel()
+    private var moviesLoadTask: CancelableTask? { willSet { moviesLoadTask?.cancel() } }
     
     init(wireframe: MoviesListWireframe, interactor: MoviesListInteractor, imageDataSource: ImageDataSourceInterface) {
         self.wireframe = wireframe
@@ -30,41 +30,53 @@ class MoviesListPresenter {
     }
     
     private func updateView(loadingType: MoviesListViewModel.LoadingType) {
-
-        self.viewModel.loadingType = loadingType
-        view?.viewModel = viewModel
+        guard !viewModel.query.isEmpty else { view?.viewModel = viewModel; return }
         
-        self.interactor.loadMovies(page: viewModel.nextPage) { [weak self] result in
-            guard let weakSelf = self else { return }
-            weakSelf.viewModel.loadingType = .none
-            weakSelf.view?.viewModel = weakSelf.viewModel
-            switch result {
-            case .success(let moviesPage):
-                weakSelf.viewModel.appendPage(moviesPage: moviesPage, imageDataSource: weakSelf.imageDataSource)
+        viewModel.loadingType = loadingType
+        view?.viewModel = viewModel
+        moviesLoadTask = interactor.loadMovies(query: viewModel.query, page: viewModel.nextPage) { [weak self] result in
+                guard let weakSelf = self else { return }
+                weakSelf.viewModel.loadingType = .none
                 weakSelf.view?.viewModel = weakSelf.viewModel
-                return
-            case .failure(let error):
-                let userErrorMessage = (error is NetworkError) ? MoviesListViewModel.errorNoConnection : MoviesListViewModel.errorFailedReloading
-                weakSelf.view?.showError(userErrorMessage)
-                return
-            }
+                switch result {
+                case .success(let moviesPage):
+                    guard !moviesPage.movies.isEmpty else {
+                        weakSelf.view?.showError(MoviesListViewModel.errorMovieNotFound)
+                        return
+                    }
+                    weakSelf.viewModel.appendPage(moviesPage: moviesPage, imageDataSource: weakSelf.imageDataSource)
+                    weakSelf.view?.viewModel = weakSelf.viewModel
+                case .failure(let error):
+                    weakSelf.handleError(error: error)
+                }
         }
+    }
+    
+    private func handleError(error: Error) {
+        var errorMsg = MoviesListViewModel.errorFailedLoading
+        if let error = error as? NetworkError {
+            errorMsg = MoviesListViewModel.errorNoConnection
+            if error == .cancelled { return }
+        }
+        view?.showError(errorMsg)
     }
 }
 
 extension MoviesListPresenter : iMoviesListEventHandler {
 
     func viewDidLoad() {
-        updateView(loadingType: .fullScreen)
-    }
-    
-    func didPullDownToRefresh() {
-        viewModel = MoviesListViewModel()
-        updateView(loadingType: .pullToRefresh)
+        updateView(loadingType: .none)
     }
     
     func didScrollToBottom() {
         guard viewModel.hasMorePages, !viewModel.isLoading else { return }
         updateView(loadingType: .nextPage)
+    }
+    
+    func searchBarSearchButtonClicked(text: String) {
+        guard !text.isEmpty else { return }
+        viewModel = MoviesListViewModel(imageDataSource: imageDataSource)
+        viewModel.query = text
+        updateView(loadingType: .fullScreen)
     }
 }
