@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 class MoviesDataSource {
     
     private let dataTransferService: DataTransferInterface
@@ -36,11 +35,11 @@ extension MoviesDataSource: MoviesDataSourceInterface {
         }
     }
     
-    func recentsQueries(number: Int) -> [String] {
+    func recentsQueries(number: Int) -> [MovieQuery] {
         return moviesPersistentStorage.recentsQueries(number: number)
     }
     
-    func saveRecentQuery(query: String) {
+    func saveRecentQuery(query: MovieQuery) {
         moviesPersistentStorage.saveRecentQuery(query: query)
     }
 }

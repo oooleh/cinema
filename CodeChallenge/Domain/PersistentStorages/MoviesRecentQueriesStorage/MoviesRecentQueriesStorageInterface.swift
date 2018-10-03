@@ -8,6 +8,6 @@
 import Foundation
 
 protocol MoviesRecentQueriesStorageInterface {
-    func recentsQueries(number: Int) -> [String]
-    func saveRecentQuery(query: String)
+    func recentsQueries(number: Int) -> [MovieQuery]
+    func saveRecentQuery(query: MovieQuery)
 }

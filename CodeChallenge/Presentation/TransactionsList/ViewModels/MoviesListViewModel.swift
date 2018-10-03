@@ -23,13 +23,14 @@ struct MoviesListViewModel {
     }
     
     private(set) var items: [Item] = []
+    private(set) var suggestions: [Suggestion]
     private(set) var currentPage: Int = 0
     private(set) var totalPageCount: Int = 1
     var isEmpty: Bool { return items.isEmpty }
     var isLoading: Bool { return loadingType != .none }
     var loadingType: LoadingType = .none
     var query: String = ""
-    var suggestions: [String]
+    
 
     var hasMorePages: Bool {
         return currentPage < totalPageCount
@@ -40,8 +41,8 @@ struct MoviesListViewModel {
         return currentPage + 1
     }
     
-    init(moviesPage: MoviesPage? = nil, suggestions: [String] = [], imageDataSource: ImageDataSourceInterface? = nil) {
-        self.suggestions = suggestions
+    init(moviesPage: MoviesPage? = nil, moviesQueries: [MovieQuery] = [], imageDataSource: ImageDataSourceInterface? = nil) {
+        self.suggestions = moviesQueries.map { Suggestion(text: $0.query) }
         guard let moviesPage = moviesPage else { return }
         appendPage(moviesPage: moviesPage, imageDataSource: imageDataSource)
     }
@@ -63,6 +64,10 @@ struct MoviesListViewModel {
         self.currentPage = moviesPage.page
         self.totalPageCount = moviesPage.totalPages
         self.items = items + moviesPage.movies.mapToItems(imageDataSource: imageDataSource)
+    }
+    
+    mutating func updateSuggestions(moviesQueries: [MovieQuery]) {
+        self.suggestions = moviesQueries.map { Suggestion(text: $0.query) }
     }
 }
 

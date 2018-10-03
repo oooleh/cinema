@@ -13,7 +13,7 @@ protocol iMoviesListEventHandler: class {
     func didScrollToBottom()
     func searchBarSearchButtonClicked(text: String)
     func searchBarCancelButtonClicked()
-    func didSelect(suggestion: String)
+    func didSelect(suggestion: MoviesListViewModel.Suggestion)
 }
 
 class MoviesListPresenter {
@@ -25,13 +25,13 @@ class MoviesListPresenter {
     private var viewModel = MoviesListViewModel()
     private var moviesLoadTask: CancelableTask? { willSet { moviesLoadTask?.cancel() } }
     let numberOfQuerySuggestions = 10
-    var querySuggestions: [String] { return interactor.recentsQueries(number: numberOfQuerySuggestions) }
+    var moviesQueries: [MovieQuery] { return interactor.recentsQueries(number: numberOfQuerySuggestions) }
     
     init(wireframe: MoviesListWireframe, interactor: MoviesListInteractor, imageDataSource: ImageDataSourceInterface) {
         self.wireframe = wireframe
         self.interactor = interactor
         self.imageDataSource = imageDataSource
-        self.viewModel.suggestions = querySuggestions
+        self.viewModel.updateSuggestions(moviesQueries: moviesQueries)
     }
     
     private func updateView(loadingType: MoviesListViewModel.LoadingType) {
@@ -52,9 +52,9 @@ class MoviesListPresenter {
                     weakSelf.view?.showError(MoviesListViewModel.errorMovieNotFound)
                     return
                 }
-                weakSelf.interactor.saveRecentQuery(query: weakSelf.viewModel.query)
+                weakSelf.interactor.saveRecentQuery(query: MovieQuery(query: weakSelf.viewModel.query))
                 weakSelf.viewModel.appendPage(moviesPage: moviesPage, imageDataSource: weakSelf.imageDataSource)
-                weakSelf.viewModel.suggestions = weakSelf.querySuggestions
+                weakSelf.viewModel.updateSuggestions(moviesQueries: weakSelf.moviesQueries)
                 weakSelf.view?.viewModel = weakSelf.viewModel
             case .failure(let error):
                 weakSelf.handleError(error: error)
@@ -85,7 +85,7 @@ extension MoviesListPresenter : iMoviesListEventHandler {
     
     func searchBarSearchButtonClicked(text: String) {
         guard !text.isEmpty else { return }
-        viewModel = MoviesListViewModel(suggestions: querySuggestions, imageDataSource: imageDataSource)
+        viewModel = MoviesListViewModel(moviesQueries: moviesQueries, imageDataSource: imageDataSource)
         viewModel.query = text
         updateView(loadingType: .fullScreen)
     }
@@ -94,9 +94,9 @@ extension MoviesListPresenter : iMoviesListEventHandler {
         moviesLoadTask?.cancel()
     }
     
-    func didSelect(suggestion: String) {
-        viewModel = MoviesListViewModel(suggestions: querySuggestions, imageDataSource: imageDataSource)
-        viewModel.query = suggestion
+    func didSelect(suggestion: MoviesListViewModel.Suggestion) {
+        viewModel = MoviesListViewModel(moviesQueries: moviesQueries, imageDataSource: imageDataSource)
+        viewModel.query = suggestion.text
         updateView(loadingType: .fullScreen)
     }
 }

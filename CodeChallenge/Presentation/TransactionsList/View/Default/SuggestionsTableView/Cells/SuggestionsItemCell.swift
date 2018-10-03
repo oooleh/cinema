@@ -14,7 +14,7 @@ class SuggestionsItemCell: UITableViewCell {
     
     @IBOutlet weak var titleLabel: UILabel!
     
-    func fill(with suggestion: String) {
-        self.titleLabel.text = suggestion
+    func fill(with suggestion: MoviesListViewModel.Suggestion) {
+        self.titleLabel.text = suggestion.text
     }
 }

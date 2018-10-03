@@ -24,11 +24,11 @@ class MoviesListInteractor {
         }
     }
     
-    func recentsQueries(number: Int) -> [String] {
+    func recentsQueries(number: Int) -> [MovieQuery] {
         return moviesDataSource.recentsQueries(number: number)
     }
     
-    func saveRecentQuery(query: String) {
+    func saveRecentQuery(query: MovieQuery) {
         return moviesDataSource.saveRecentQuery(query: query)
     }
 }
