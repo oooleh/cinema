@@ -19,7 +19,8 @@ class MoviesListWireframe {
 
     private weak var presenter: MoviesListPresenter?
     
-    class func assemble(dependencies: MoviesListDependencies, forView view: MoviesListViewInterface) {
+    @discardableResult
+    class func assemble(dependencies: MoviesListDependencies, forView view: MoviesListViewInterface) -> MoviesListViewInterface {
         
         let wireframe = MoviesListWireframe()
         let interactor = MoviesListInteractor(moviesDataSource: dependencies.moviesDataSource)
@@ -28,6 +29,8 @@ class MoviesListWireframe {
         presenter.view = view
         view.eventHandler = presenter
         wireframe.presenter = presenter
+        
+        return view
     }
 }
 
