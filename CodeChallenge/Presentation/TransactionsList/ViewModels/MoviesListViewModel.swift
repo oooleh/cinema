@@ -74,7 +74,7 @@ struct MoviesListViewModel {
 extension MoviesListViewModel {
     static let title = NSLocalizedString("Movies", comment: "")
     static let searchBarPlaceholder = NSLocalizedString("Search Movies", comment: "")
-    static let emptyListTitle = NSLocalizedString("List is empty.", comment: "")
+    static let emptyListTitle = NSLocalizedString("Search results ", comment: "")
     static let errorTitle = NSLocalizedString("Error", comment: "")
     static let errorNoConnection = NSLocalizedString("No internet connection", comment: "")
     static let errorMovieNotFound = NSLocalizedString("The film does not exist", comment: "")
